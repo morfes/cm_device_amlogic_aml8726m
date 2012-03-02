@@ -1,0 +1,89 @@
+on early-init
+	export EXTERNAL_STORAGE /mnt/sdcard
+	mkdir /mnt/sdcard 0000 system system
+	# for backwards compatibility
+	symlink /mnt/sdcard /sdcard
+
+	mkdir /mnt/nand 0000 system system
+	mkdir /mnt/usb 0000 system system
+
+	write /sys/class/graphics/fb0/blank 0
+	write /sys/class/graphics/fb1/blank 1
+	write /sys/class/display/mode panel
+
+on post-fs-data
+	mkdir /data/misc/wifi 0770 wifi wifi
+	mkdir /data/misc/wifi/sockets 0770 wifi wifi
+	mkdir /data/misc/dhcp 0770 dhcp dhcp
+	chown dhcp dhcp /data/misc/dhcp
+
+	mkdir /data/misc/sensors
+
+	setprop vold.post_fs_data_done 1
+
+on boot
+	mount debugfs /sys/kernel/debug /sys/kernel/debug
+
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor conservative
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 300000
+	write /sys/devices/system/cpu/cpu0/cpufreq/conservative/freq_step 20
+
+on fs
+	setprop ro.crypto.tmpfs_options size=128m,mode=0771,uid=1000,gid=1000
+
+# permissions for bluetooth.
+	#setprop ro.bt.bdaddr_path 
+	#chown bluetooth bluetooth ro.bt.bdaddr_path
+	#chown bluetooth bluetooth /dev/tty
+	#chmod 0600 /dev/tty
+	#chmod 0660 /sys/class/rfkill/rfkill0/state
+	#chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
+	#chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
+
+	insmod /system/lib/modules/ump.ko
+	insmod /system/lib/modules/mali.ko
+
+	chown system system /sys/class/backlight/aml-bl/brightness
+
+# create filesystems if necessary
+#service setup_fs /system/bin/setup_fs 
+#	class core
+#	user root
+#	group root
+#	oneshot
+
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -c/data/misc/wifi/wpa_supplicant.conf
+	class main
+	socket wpa_eth0 dgram 660 wifi wifi
+	disabled
+	oneshot
+
+service dhcpcd_eth0 /system/bin/dhcpcd -ABKL
+	class main
+	disabled
+	oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+	class main
+	disabled
+	oneshot
+
+# bugreport is triggered by holding down volume down, volume up and power
+service bugreport /system/bin/bugmailer.sh -v
+	class main
+	disabled
+	oneshot
+	keycodes 114 115 116
+
+service audio /system/bin/alsa_ctl restore
+	class core
+	group system audio
+	oneshot
+
+service memsicd /system/bin/memsicd
+	class core
+	oneshot
+
+#service remotecfg /system/bin/remotecfg /system/etc/remote.conf
+#	class main
+#	oneshot
