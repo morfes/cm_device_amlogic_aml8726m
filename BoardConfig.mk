@@ -50,6 +50,7 @@ TARGET_RECOVERY_INITRC := device/amlogic/aml8726m/recovery_init.rc
 #TARGET_RECOVERY_PRE_COMMAND := ""
 #TARGET_RECOVERY_PIXEL_FORMAT := ""
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/amlogic/aml8726m/recovery_keys.c
+#BOARD_UMS_LUNFILE := "/sys/devices/platform/usb_mass_storage/lun0/file"
 BOARD_HAS_SMALL_RECOVERY = true
 
 #TARGET_USERIMAGES_USE_EXT4 := true
