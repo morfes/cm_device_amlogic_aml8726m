@@ -27,6 +27,7 @@ DEVICE_PACKAGE_OVERLAYS := device/amlogic/aml8726m/overlay
 PRODUCT_COPY_FILES := \
 	$(LOCAL_KERNEL):kernel \
 	device/amlogic/aml8726m/init.amlogic.rc:root/init.amlogic.rc \
+	device/amlogic/aml8726m/init.amlogic.usb.rc:root/init.amlogic.usb.rc \
 	device/amlogic/aml8726m/ueventd.amlogic.rc:root/ueventd.amlogic.rc \
 	device/amlogic/aml8726m/etc/vold.fstab:system/etc/vold.fstab \
 	device/amlogic/aml8726m/etc/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
@@ -41,8 +42,8 @@ PRODUCT_PROPERTY_OVERRIDES := \
 	wifi.supplicant_scan_interval=15
 
 # Set default USB interface
-#PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-#	persist.sys.usb.config=mtp
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+	persist.sys.usb.config=mass_storage
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
