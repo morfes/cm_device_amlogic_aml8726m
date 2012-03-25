@@ -80,6 +80,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 	ro.opengles.version=131072
 
 PRODUCT_PROPERTY_OVERRIDES += \
+	dalvik.vm.dexopt-data-only=1 \
 	hwui.render_dirty_regions=false \
 	qemu.sf.lcd_density=160 \
 	ro.sf.gsensorposition=4 \
