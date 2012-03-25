@@ -1,6 +1,9 @@
 # Release name
 PRODUCT_RELEASE_NAME := AML8726M
 
+# Boot animation
+TARGET_BOOTANIMATION_NAME := vertical-320x480
+
 # Inherit some common CM stuff.
 $(call inherit-product, vendor/cm/config/common_full_tablet_wifionly.mk)
 
